@@ -6,11 +6,13 @@ class StandardScheduler(object):
 
 	input_queue_object = None
 	output_queue_object = None
-	def __init__(self, number_of_queue):
-		super(Scheduler, self).__init__()
+	def __init__(self, number_of_queue,data):
+		super(StandardScheduler, self).__init__()
 		self.number_of_queue = number_of_queue
 		self.input_queue_object = SuperQueue(int(self.number_of_queue))
 		self.output_queue_object = SuperQueue(int(self.number_of_queue))
+
+		self.input_queue_object.insert_data_in_queues(data)
 
 	def Test_Queues(self):
 		print "Input Queues"
@@ -18,7 +20,5 @@ class StandardScheduler(object):
 		print "\nQutput Queues"
 		self.output_queue_object.debug()
 
-	def Packet_Exchange(self,inp_queue, out_queue, from , to):
-
-
-
+	def Packet_Exchange(self,from_super_queue,to_super_queue,from_queue,to_queue):
+		print from_super_queue, to_super_queue, from_queue, to_queue

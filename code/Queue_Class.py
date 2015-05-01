@@ -40,7 +40,7 @@ class SuperQueue:
 		for i in xrange(0,default_number_queue):
 			self.input_streams[i] = {
 				'outport' : i, 
-				'queue'  : Queue()
+				'queue'  : Queue(default_number_queue)
 				}
 			self.number_of_queues = default_number_queue
 
@@ -64,15 +64,13 @@ class SuperMultiQueue:
 
 	def __init__(self, default_number_queue = 4):
 		self.input_ports = {}
-		self.number_of_queues = 0
+		self.number_of_queues = default_number_queue
 
 		for i in xrange(0,default_number_queue):
 			self.input_ports[i] = {
 				'inport' : i,
-				'queue'  : SuperQueue()
+				'queue'  : SuperQueue(default_number_queue)
 			}
-
-		self.number_of_queues = default_number_queue
 
 	def debug(self):
 		for i in self.input_ports:
@@ -88,37 +86,11 @@ class SuperMultiQueue:
 			except Exception as e:
 				packets_source[src] = []
 				packets_source[src].append(packet)
+		
+		print packets_source
 
 		for keys in packets_source:
 			queue1 = None 
 			queue1 = self.input_ports[keys]['queue']
 			queue1.insert_data_in_queues(packets_source[keys])
 			self.input_ports[keys]['queue'] = queue1
-
-# #Testing of input data Queue
-# Q= SuperMultiQueue()
-# data_list = []
-
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 3})
-
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 3})
-
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 3})
-
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
-
-
-# Q.insert_data_in_queues(data_list)
-# Q.debug()
