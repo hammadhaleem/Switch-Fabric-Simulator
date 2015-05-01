@@ -17,8 +17,6 @@ class Scheduler(object):
 		print "\nQutput Queues"
 		self.output_queue_object.debug()
 
-S = Scheduler(4)
-S.Test_Queues()
 
 
 		
