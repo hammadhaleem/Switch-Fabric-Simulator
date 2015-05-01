@@ -56,25 +56,25 @@ class SuperQueue:
 # Q= SuperQueue()
 
 # data_list = []
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data"})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data"})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data"})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data"})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data"})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
 
 
 # Q.insert_data_in_queues(data_list)
