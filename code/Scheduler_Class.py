@@ -1,6 +1,7 @@
 from Queue_Class import *
 
-class Scheduler(object):
+
+class StandardScheduler(object):
 	"""This is a template for a Scheduler which will manage input and output Queues."""
 
 	input_queue_object = None
@@ -17,6 +18,7 @@ class Scheduler(object):
 		print "\nQutput Queues"
 		self.output_queue_object.debug()
 
+	def Packet_Exchange(self,inp_queue, out_queue, from , to):
 
 
-		
+

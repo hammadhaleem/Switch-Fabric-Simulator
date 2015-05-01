@@ -1,4 +1,16 @@
 import time 
+import pprint
+
+# get a list of input obejcts and allocate them to different subques.
+# if a object want to route to a 
+# packet = {
+# 	'timestamp' : xxxxx,
+# 	'outport' : xxxx,
+# 	'data' : xxxxxxxxxxx,
+# 	'source' : xxxxx
+# }
+
+pp = pprint.PrettyPrinter(indent=4)
 
 class Queue:
 
@@ -22,10 +34,9 @@ class Queue:
 
 class SuperQueue:
 
-	input_streams = {}
-	number_of_queues = 0
-
 	def __init__(self, default_number_queue = 4):
+		self.input_streams = {}
+		self.number_of_queues = 0
 		for i in xrange(0,default_number_queue):
 			self.input_streams[i] = {
 				'outport' : i, 
@@ -33,47 +44,79 @@ class SuperQueue:
 				}
 			self.number_of_queues = default_number_queue
 
-	# get a list of input obejcts and allocate them to different subques.
-	# if a object want to route to a 
-	# packet = {
-	# 	'timestamp' : xxxxx,
-	# 	'outport' : xxxx,
-	# 	'data' : xxxxxxxxxxx
-	# }
+	def pop_from_queue(self,source,dest):
+		return self.input_streams[int(source)].process()
+
 
 	def insert_data_in_queues(self,data_list):
 		for packet in data_list:
+			Stream = None
 			Stream = self.input_streams[packet['outport']]
 			Stream['queue'].insert(packet)
-			self.input_streams[packet['outport']]
+			self.input_streams[packet['outport']] = Stream
 
 	def debug(self):
 		for i in self.input_streams:
-			print i , self.input_streams[i]['queue'].debug()
+			print (self.input_streams[i]['queue'].debug())
+		print "\n"
 
-# Testing of inut data Queue
+class SuperMultiQueue:
 
-# Q= SuperQueue()
+	def __init__(self, default_number_queue = 4):
+		self.input_ports = {}
+		self.number_of_queues = 0
 
+		for i in xrange(0,default_number_queue):
+			self.input_ports[i] = {
+				'inport' : i,
+				'queue'  : SuperQueue()
+			}
+
+		self.number_of_queues = default_number_queue
+
+	def debug(self):
+		for i in self.input_ports:
+			self.input_ports[i]['queue'].debug()
+
+	def insert_data_in_queues(self,data_list):
+		packets_source  = {}
+
+		for packet in data_list: 
+			src = int(packet['source'])
+			try:
+				packets_source[src].append(packet)
+			except Exception as e:
+				packets_source[src] = []
+				packets_source[src].append(packet)
+
+		for keys in packets_source:
+			queue1 = None 
+			queue1 = self.input_ports[keys]['queue']
+			queue1.insert_data_in_queues(packets_source[keys])
+			self.input_ports[keys]['queue'] = queue1
+
+# #Testing of input data Queue
+# Q= SuperMultiQueue()
 # data_list = []
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
-# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
-# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 3})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
-# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 3})
 
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
-# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+# data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 3})
+
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 0})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 1})
+# data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 2})
 # data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
 
 
