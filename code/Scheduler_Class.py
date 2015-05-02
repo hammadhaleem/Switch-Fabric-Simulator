@@ -15,6 +15,9 @@ class StandardScheduler(object):
 		print "\nQutput Queues"
 		self.output_queue_object.debug()
 
+	def Get_Output(self):
+		return self.output_queue_object.get_data_stream()
+
 	# ((input port, output) , output_Card)
 	def Packet_Exchange(self,set_inp,set_out):
 		try:

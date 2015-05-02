@@ -100,3 +100,16 @@ class SuperMultiQueue:
 		temp_super['queue'].input_streams[card[1]]['queue'] = temp_queue
 		self.input_ports[card[0]] = temp_super
 		return data
+
+	def get_data_stream(self):
+		data_list = []
+		for key in self.input_ports:
+			queue = self.input_ports[key]['queue']
+			for key_next in queue.input_streams:
+				stream = queue.input_streams[key_next]['queue']
+				while  True:
+					pop = stream.process()
+					if pop is None:
+						break
+					data_list.append(pop)
+		return data_list
