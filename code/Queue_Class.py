@@ -58,7 +58,6 @@ class SuperQueue:
 	def debug(self):
 		for i in self.input_streams:
 			print (self.input_streams[i]['queue'].debug())
-		print "\n"
 
 class SuperMultiQueue:
 
@@ -74,6 +73,7 @@ class SuperMultiQueue:
 
 	def debug(self):
 		for i in self.input_ports:
+			print "\t\t",(i)
 			self.input_ports[i]['queue'].debug()
 
 	def insert_data_in_queues(self,data_list):
@@ -86,11 +86,17 @@ class SuperMultiQueue:
 			except Exception as e:
 				packets_source[src] = []
 				packets_source[src].append(packet)
-		
-		print packets_source
-
+	
 		for keys in packets_source:
 			queue1 = None 
 			queue1 = self.input_ports[keys]['queue']
 			queue1.insert_data_in_queues(packets_source[keys])
 			self.input_ports[keys]['queue'] = queue1
+
+	def pop_from_queue(self,card):
+		temp_super = self.input_ports[card[0]]
+		temp_queue = temp_super['queue'].input_streams[card[1]]['queue']
+		data = temp_queue.process()
+		temp_super['queue'].input_streams[card[1]]['queue'] = temp_queue
+		self.input_ports[card[0]] = temp_super
+		return data
