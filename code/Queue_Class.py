@@ -18,6 +18,9 @@ class Queue:
 		self.queue = []
 		self.out = 0
 
+	def get_len(self):
+		return len(self.queue)
+
 	def insert(self , obj):
 		self.queue.append(obj)
 
@@ -71,6 +74,7 @@ class SuperMultiQueue:
 				'queue'  : SuperQueue(default_number_queue)
 			}
 
+
 	def debug(self):
 		for i in self.input_ports:
 			print "\t\t",(i)
@@ -112,4 +116,16 @@ class SuperMultiQueue:
 					if pop is None:
 						break
 					data_list.append(pop)
+		return data_list
+
+	def generate_input_status(self):
+		data_list = {}
+		for key in self.input_ports:
+			data_list[key] = {}
+			queue = self.input_ports[key]['queue']
+
+			for key_next in queue.input_streams:
+				data_list[key][key_next] = 0
+				stream = queue.input_streams[key_next]['queue']
+				data_list[key][key_next] = stream.get_len()
 		return data_list

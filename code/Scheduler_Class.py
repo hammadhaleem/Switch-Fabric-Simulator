@@ -32,16 +32,5 @@ class StandardScheduler(object):
 			pass
 			return False
 
-
-
-class RoundRobinScheduler(StandardScheduler):
-
-	def __init__(self, number_of_queue,data):
-		super(RoundRobinScheduler, self).__init__()
-		self.number_of_queue = number_of_queue
-		self.input_queue_object  = SuperMultiQueue(int(self.number_of_queue))
-		self.output_queue_object = SuperMultiQueue(int(self.number_of_queue))
-		self.input_queue_object.insert_data_in_queues(data)
-
-	def generate_sequences_robin(self):
-		return True
+	def Status(self):
+		return self.input_queue_object.generate_input_status()
