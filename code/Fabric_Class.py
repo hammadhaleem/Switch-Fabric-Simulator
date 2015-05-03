@@ -12,7 +12,6 @@ class RoundRobinScheduler(StandardScheduler):
 		self.input_queue_object  = SuperMultiQueue(int(self.number_of_queue))
 		self.output_queue_object = SuperMultiQueue(int(self.number_of_queue))
 		self.input_queue_object.insert_data_in_queues(data)
-
 		self.pointer = self.create_state_variable()
 
 	def generate_sequences_robin(self):
@@ -35,8 +34,6 @@ class RoundRobinScheduler(StandardScheduler):
 		# pp.pprint (self.pointer)
 		# pp.pprint (input_status)
 
-		# print "\n"
-
 		#Grant
 		actions =[]
 		allocated = []
@@ -56,7 +53,6 @@ class RoundRobinScheduler(StandardScheduler):
 
 				if (len(input_status[keys]) > 0):
 					pin = self.pointer[keys]['pointer'] +1
-					# print input_status[keys], pin
 					while  True:
 						if pin in input_status[keys]:
 							self.pointer[keys]['count'] = self.pointer[keys]['count'] - 1
@@ -71,26 +67,12 @@ class RoundRobinScheduler(StandardScheduler):
 							pin = self.pointer[keys]['pointer']
 						else:
 							pin = self.pointer[keys]['pointer'] +1
-						# print input_status[keys], pin
 
-		#Debug
+		if len(actions) < 1 :
+			return False
 		pp.pprint(actions)
-		# pp.pprint (self.pointer)
-		# pp.pprint (input_status)
-		# # Grant Sequence
 
 		for i in actions:
 			self.Packet_Exchange(i[0],i[1])
-
-	def create_state_variable(self):
-		states = {}
-		data =self.Status()
-		for cards in data : 
-			obj = {}
-			obj['pointer'] = None
-			obj['count'] = 0
-			obj['max'] = self.number_of_queue
-			for keys in data[cards] :
-				obj['count'] = obj['count'] +  data[cards][keys]
-			states[cards] =obj
-		return states
+		
+		return True
