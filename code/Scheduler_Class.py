@@ -1,5 +1,5 @@
 from Queue_Class import *
-
+import time
 class StandardScheduler(object):
 
 	def __init__(self, number_of_queue,data):
@@ -26,6 +26,7 @@ class StandardScheduler(object):
 			out = data['source']
 			data['source']= set_out 
 			data['outport'] = set_out
+			data['time_out'] =time.time()
 			self.output_queue_object.insert_data_in_queues(fake_list)
 			return True
 		except:
