@@ -19,31 +19,69 @@ class RoundRobinScheduler(StandardScheduler):
 		number_of_queue = self.number_of_queue
 		input_status =  self.Status()
 		pointer = self.pointer
-		# pp.pprint( input_status)
-		# pp.pprint( pointer )
 
-		for key_1 in input_status:
-			for key_2 in input_status[key_1]:
-				data = input_status[key_1][key_2]
-				if ( data != 0 ) and pointer[key_1]['pointer'] is None:
-					 pointer[key_1]['pointer'] = key_1
-					 input_status[key_1][key_2] = input_status[key_1][key_2] - 1
-					 print (key_1,pointer[key_1]['pointer']),pointer[key_1]['pointer']					 
-					 self.Packet_Exchange((key_1,pointer[key_1]['pointer']),pointer[key_1]['pointer'])
-					 break
-
-				if (data != 0) and pointer[key_1]['pointer'] is not None:
-					pointer[key_1]['pointer'] = pointer[key_1]['pointer']  + 1
-					if pointer[key_1]['pointer'] >= number_of_queue:
-						print "\n",number_of_queue, pointer[key_1]['pointer']
-						pointer[key_1]['pointer'] = 0
-						print (key_1,pointer[key_1]['pointer']),pointer[key_1]['pointer']					 
-					 	self.Packet_Exchange((key_1,pointer[key_1]['pointer']),pointer[key_1]['pointer'])
-					 	break
-
-
+		# Request
+		data = {}
+		for keys in input_status :
+			obj = input_status[keys]
+			data[keys] = []
+			for ob in obj:
+				if obj[ob] > 0 :
+					data[keys].append(ob)
+		input_status = data
 		self.pointer = pointer
-		print "\n",pointer, input_status
+
+		#Debug
+		# pp.pprint (self.pointer)
+		# pp.pprint (input_status)
+
+		# print "\n"
+
+		#Grant
+		actions =[]
+		allocated = []
+		for keys in self.pointer:
+			if self.pointer[keys]['pointer'] is None:
+				for out in  input_status[keys]:
+						try:
+							if out not in allocated:
+								self.pointer[keys]['pointer'] = out
+								self.pointer[keys]['count'] = self.pointer[keys]['count'] - 1
+								allocated.append(out)
+								actions.append([(keys,out),out])
+								del input_status[keys][input_status[keys].index(out)]
+						except :
+							pass 
+			elif self.pointer[keys]['pointer'] is not None:
+
+				if (len(input_status[keys]) > 0):
+					pin = self.pointer[keys]['pointer'] +1
+					# print input_status[keys], pin
+					while  True:
+						if pin in input_status[keys]:
+							self.pointer[keys]['count'] = self.pointer[keys]['count'] - 1
+							allocated.append(pin)
+							actions.append([(keys,pin),pin])
+							del input_status[keys][input_status[keys].index(pin)]
+							break
+
+						self.pointer[keys]['pointer'] = self.pointer[keys]['pointer'] + 1
+						if self.pointer[keys]['pointer']  > number_of_queue:
+							self.pointer[keys]['pointer']  = 0 
+							pin = self.pointer[keys]['pointer']
+						else:
+							pin = self.pointer[keys]['pointer'] +1
+						# print input_status[keys], pin
+
+		#Debug
+		pp.pprint(actions)
+		# pp.pprint (self.pointer)
+		# pp.pprint (input_status)
+		# # Grant Sequence
+
+		for i in actions:
+			self.Packet_Exchange(i[0],i[1])
+
 	def create_state_variable(self):
 		states = {}
 		data =self.Status()
@@ -53,7 +91,6 @@ class RoundRobinScheduler(StandardScheduler):
 			obj['count'] = 0
 			obj['max'] = self.number_of_queue
 			for keys in data[cards] :
-
 				obj['count'] = obj['count'] +  data[cards][keys]
 			states[cards] =obj
 		return states
