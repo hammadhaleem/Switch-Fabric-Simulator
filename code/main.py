@@ -7,14 +7,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 pp = pprint.PrettyPrinter(indent=4)
+
+#########   Configration variables #############################
 NUMBER_OF_ACTIVE_QUEUES = 6
 NUMBER_OF_PACKETS = 5000
-SCHEDULER_TYPE = 0 # 0 -> RR , 1-> Islip
-
-
+SCHEDULER_TYPE = 1 # 0 -> RR , 1-> Islip
 #########Configration goes above this line ######################
-NUMBER_OF_ACTIVE_QUEUES = NUMBER_OF_ACTIVE_QUEUES + 1
 
+NUMBER_OF_ACTIVE_QUEUES = NUMBER_OF_ACTIVE_QUEUES + 1
 
 def Main(data):
 	if SCHEDULER_TYPE == 0:	
@@ -24,7 +24,7 @@ def Main(data):
 		return S_1.Get_Output()
 	elif SCHEDULER_TYPE == 1:
 		S_2 = iSlipScheduler(NUMBER_OF_ACTIVE_QUEUES,data)
-		while S_2.generate_sequences() :
+		while S_2.generate_sequences():
 		 	pass
 		return S_2.Get_Output()
 
@@ -61,23 +61,94 @@ def run_analysis(multiplier,type_in=0):
 	sum_of_diff, number = get_average_time(data_list)
 	return (sum_of_diff/number) , number
 
+def run_analysis_robin():
+	SCHEDULER_TYPE = 0
 
-pairs = []
-plt1 =plt
-for multiplier in xrange(1,75):
-	avg,number = run_analysis(multiplier,1)
-	print multiplier,avg,number
-	pairs.append((number,avg))
+	pairs = []
+	plt1 =plt
+	for multiplier in xrange(1,75):
+		avg,number = run_analysis(multiplier,1)
+		print multiplier,avg,number
+		pairs.append((number,avg))
 
-plt1.plot([p[0] for p in pairs], [p[1] for p in pairs], '.')
+	plt1.plot([p[0] for p in pairs], [p[1] for p in pairs], 'b--')
 
-pairs = []
-for multiplier in xrange(1,75):
-	avg,number = run_analysis(multiplier,0)
-	print multiplier,avg,number
-	pairs.append((number,avg))
+	pairs = []
+	for multiplier in xrange(1,75):
+		avg,number = run_analysis(multiplier,0)
+		print multiplier,avg,number
+		pairs.append((number,avg))
 
-plt.plot([p[0] for p in pairs], [p[1] for p in pairs], '.')
-plt1.show()
-plt.show()
+	plt.plot([p[0] for p in pairs], [p[1] for p in pairs], 'g--')
+	return plt , plt1
 
+def run_analysis_islip():
+	SCHEDULER_TYPE = 1
+
+	pairs = []
+	plt1 =plt
+	for multiplier in xrange(1,75):
+		avg,number = run_analysis(multiplier,1)
+		print multiplier,avg,number
+		pairs.append((number,avg))
+
+	plt1.plot([p[0] for p in pairs], [p[1] for p in pairs], 'r--')
+
+	pairs = []
+	for multiplier in xrange(1,75):
+		avg,number = run_analysis(multiplier,0)
+		print multiplier,avg,number
+		pairs.append((number,avg))
+
+	plt.plot([p[0] for p in pairs], [p[1] for p in pairs], 'b--')
+	return plt , plt1
+
+
+def make_plots():
+	plt1,plt2 = run_analysis_robin()
+	plt3,plt4 = run_analysis_islip()
+	plt1.show()
+	plt2.show()
+	plt3.show()
+	plt4.show()
+
+def Main_Test(data):
+
+	S = RoundRobinScheduler(NUMBER_OF_ACTIVE_QUEUES,data)
+	while S.generate_sequences():
+		print S.Status(),"\n"
+	print S.Status()
+
+def evaluate_basic_functioning():
+
+	data_list = []
+
+	data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 1})
+	data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 2})
+	data_list.append({'timestamp' : time.time(),'outport' : 0,'data' : "this is my data", 'source' : 3})
+
+	data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 1})
+	data_list.append({'timestamp' : time.time(),'outport' : 1,'data' : "this is my data", 'source' : 2})
+	data_list.append({'timestamp' : time.time(),'outport' : 4,'data' : "this is my data", 'source' : 4})
+
+	data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 1})
+	data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 2})
+	data_list.append({'timestamp' : time.time(),'outport' : 2,'data' : "this is my data", 'source' : 3})
+
+	data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 1})
+	data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 2})
+	data_list.append({'timestamp' : time.time(),'outport' : 3,'data' : "this is my data", 'source' : 3})
+
+	data_list.append({'timestamp' : time.time(),'outport' : 1 ,'data' : "this is my data", 'source' : 1})
+	data_list.append({'timestamp' : time.time(),'outport' : 1 ,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 0 ,'data' : "this is my data", 'source' : 0})
+	data_list.append({'timestamp' : time.time(),'outport' : 0 ,'data' : "this is my data", 'source' : 1})
+	Main_Test(data_list)
+
+
+evaluate_basic_functioning()
+make_plots()
