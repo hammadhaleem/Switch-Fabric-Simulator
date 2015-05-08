@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 pp = pprint.PrettyPrinter(indent=4)
 
 #########   Configration variables #############################
-NUMBER_OF_ACTIVE_QUEUES = 6
-NUMBER_OF_PACKETS = 5000
-SCHEDULER_TYPE = 1 # 0 -> RR , 1-> Islip
+NUMBER_OF_ACTIVE_QUEUES = 20
+NUMBER_OF_PACKETS = 50000
+SCHEDULER_TYPE = 0 # 0 -> RR , 1-> Islip
 #########Configration goes above this line ######################
 
 NUMBER_OF_ACTIVE_QUEUES = NUMBER_OF_ACTIVE_QUEUES + 1
@@ -150,5 +150,5 @@ def evaluate_basic_functioning():
 	Main_Test(data_list)
 
 
-evaluate_basic_functioning()
+# evaluate_basic_functioning()
 make_plots()
